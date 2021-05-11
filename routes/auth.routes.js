@@ -8,9 +8,9 @@ const User = require('../models/User.model')
 
 /* POST new user */
 router.post('/signup', (req, res, next) => {
-    const { username, password } = req.body
-    if (username === '' || password === '') {
-      res.send({ message: "Username and password can't be empty" })
+    const { username, password, age, location} = req.body
+    if (username === '' || password === '' || age === '' || location === '') {
+      res.send({ message: "All the fields are mandatory" })
       return
     } else if (password.length < 6) {
       res.send({ message: 'The password must be at least 6 digits long' })
@@ -23,7 +23,7 @@ router.post('/signup', (req, res, next) => {
           return
         } else {
           const hashedPassword = bcrypt.hashSync(password, 10)
-          User.create({ username, password: hashedPassword }).then((result) => {
+          User.create({ username, password: hashedPassword, age, location}).then((result) => {
             res.send({ message: 'User created', result })
           })
         }
