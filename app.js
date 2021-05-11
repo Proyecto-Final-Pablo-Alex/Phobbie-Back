@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const express = require('express')
 const chalk = require('chalk')
-
+const cors = require('cors')
 const bcrypt = require('bcryptjs')
 const flash = require('connect-flash')
 const session = require('express-session')
@@ -12,7 +12,7 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 
 // -------- MONGOOSE --------
-require('./configs/mongoose')
+require('./configs/mongoose.config')
 
 const app = express()
 
@@ -20,6 +20,15 @@ const app = express()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
+
+// ---------------CORS-----------
+app.use(
+  cors({
+    methods: ['GET', 'POST'],
+    credentials: true,
+    origin: ['http://localhost:3000'],
+  })
+)
 
 // -------- PASSPORT --------
 app.use(
