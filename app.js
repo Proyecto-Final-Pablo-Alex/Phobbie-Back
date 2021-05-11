@@ -11,6 +11,8 @@ const session = require('express-session')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 
+const User = require('./models/User.model')
+
 // -------- MONGOOSE --------
 require('./configs/mongoose.config')
 
@@ -92,6 +94,8 @@ app.use(passport.session())
 
 app.use('/', require('./routes/index.routes'))
 app.use('/', require('./routes/auth.routes'))
+app.use('/', require('./routes/profile.routes'))
+app.use('/', require('./routes/hobbies.routes'))
 
 app.listen(process.env.PORT || 5000, () => {
   console.log(chalk.green.inverse('Puerto activado'))

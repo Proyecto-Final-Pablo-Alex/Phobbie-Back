@@ -12,6 +12,6 @@ const hobbieSchema = new Schema(
   { versionKey: false }
 )
 
-const Hobbie = mongoose.model('Hobby', hobbySchema)
+const Hobbie = mongoose.model('Hobbie', hobbieSchema)
 
 module.exports = Hobbie

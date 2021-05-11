@@ -46,6 +46,11 @@ router.post(
               res.send({ message: 'This user does not exist', failureDetails })
               return
             }
+
+            res.cookie('sameSite', 'none', {
+              sameSite: true,
+              secure: true,
+            })
         
             req.login(user, (err) => {
               if (err) {
