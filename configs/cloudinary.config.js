@@ -9,10 +9,9 @@ cloudinary.config({
 });
  
 const storage = new CloudinaryStorage({
-
   cloudinary,
   folder: 'profilepics',
-  allowedFormats: ['jpg', 'png'],
+  allowedFormats: ['jpg', 'png', 'gif'],
   filename: function (req, file, cb) {
     cb(null, file.originalname)
 
