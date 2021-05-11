@@ -6,20 +6,20 @@ const Hobbie = require('../models/Hobbie.model')
 router.get(`/hobbies/allHobbies`, (req, res) => {
   Hobbie.find({})
     .then((result) => {
-      res.send({ hobbies: result })
+      res.status(200).send({ hobbies: result })
     })
     .catch((err) => {
-      res.send({ message: 'Something went wrong' }, err)
+      res.status(400).send({ message: 'Something went wrong' }, err)
     })
 })
 
 router.post('/hobbies/addHobbie', (req, res)=> {
   Hobbie.create(req.body)
   .then(result => {
-    res.send({hobbie: result})
+    res.status(201).send({hobbie: result})
   })
   .catch(err=> {
-    res.send({ message: 'Something went wrong' }, err)
+    res.status(400).send({ message: 'Something went wrong' }, err)
   })
 })
 
