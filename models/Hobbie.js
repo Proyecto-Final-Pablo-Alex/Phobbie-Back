@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
 
-const hobbySchema = new Schema(
+const hobbieSchema = new Schema(
   {
     name: { type: String, required: true },
     foto: { type: String, required: true },
@@ -12,6 +12,6 @@ const hobbySchema = new Schema(
   { versionKey: false }
 )
 
-const Hobby = mongoose.model('Hobby', hobbySchema)
+const Hobbie = mongoose.model('Hobby', hobbySchema)
 
-module.exports = Hobby
+module.exports = Hobbie
