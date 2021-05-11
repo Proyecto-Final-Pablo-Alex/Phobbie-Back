@@ -21,7 +21,7 @@ router.get(`/user-list/:username`, (req, res) => {
 
 router.post('/edit-user', fileUploader.single('photo'), (req, res)=>{
   const {username, _id, password, age, location, actualPhoto} = req.body
-  
+
   let photo
   if (req.file){
     photo = req.file.path
@@ -31,10 +31,13 @@ router.post('/edit-user', fileUploader.single('photo'), (req, res)=>{
 
   User.findByIdAndUpdate(_id, {username, password, age, location, photo})
     .then(result => {
-      console.log(result)
+      User.findById(_id)
+        .then(user => {
+          res.send({message: 'Edited succesfully', user})  
+        })
     })
     .catch(error => {
-      console.log(error)
+      res.send({message: 'Something went wrong', error})
     })
     
 })
