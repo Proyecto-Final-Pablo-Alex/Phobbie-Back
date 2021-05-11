@@ -14,11 +14,13 @@ router.get(`/hobbies/allHobbies`, (req, res) => {
 })
 
 router.post('/hobbies/addHobbie', (req, res)=> {
-  Hobbie.create(req.body)
+  const {name, photo, description} = req.body
+  Hobbie.create({name, photo, description})
   .then(result => {
-    res.status(201).send({hobbie: result})
+    res.status(201).send(result)
   })
   .catch(err=> {
+    console.log(err)
     res.status(400).send({ message: 'Something went wrong' }, err)
   })
 })
