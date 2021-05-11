@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const User = require('../models/User.model')
+const Hobbie = require('../models/Hobbie.model')
 
 router.get(`/hobbies/AllHobbies`, (req, res) => {
   const { username } = req.params
