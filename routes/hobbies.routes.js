@@ -55,4 +55,16 @@ router.post('/hobbies/addToMyHobbies', (req, res)=>{
   })
 })
 
+router.get('/hobbie-details', (req, res)=>{
+  const {name} = req.body
+  Hobbie.findOne({name})
+  .then(hobbie => {
+    res.send(hobbie)
+  })
+  .catch(error => {
+    console.log(error)
+  })
+  
+})
+
 module.exports = router
