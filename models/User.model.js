@@ -12,7 +12,7 @@ const userSchema = new Schema(
     age: {type:Number},
     location:{type:String},
     friends: [{type: Schema.Types.ObjectId, ref: 'User'}],
-    hobbies: [{ type: Schema.Types.ObjectId, ref: 'Hobby' }],
+    hobbies: [{ type: Schema.Types.ObjectId, ref: 'Hobbie' }],
   },
   { versionKey: false }
 )
