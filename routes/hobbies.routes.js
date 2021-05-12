@@ -39,20 +39,32 @@ router.post('/hobbies/addHobbie', (req, res)=> {
 })
 
 router.post('/hobbies/addToMyHobbies', (req, res)=>{
-  const {name, userId} = req.body
-  Hobbie.findOne({name})
-  .then(hobbie => {
-    Hobbie.findByIdAndUpdate(hobbie._id, {$push: {users: userId}}, {new: true})
-    .then((updatedHobbie)=>{
-      User.findByIdAndUpdate(userId, {$push: {hobbies: updatedHobbie._id}}, {new: true})
-      .then((user)=>{
-        res.status(201).send(user)
-      })
+  const {_id, userId} = req.body
+  Hobbie.findByIdAndUpdate(_id, {$push: {users: userId}}, {new: true})
+  .then((updatedHobbie)=>{
+    User.findByIdAndUpdate(userId, {$push: {hobbies: updatedHobbie._id}}, {new: true})
+    .then((user)=>{
+      res.status(201).send(user)
     })
   })
   .catch(err=>{
     res.status(400).send({ message: 'Something went wrong' }, err)
   })
+})
+
+router.post('/hobbies/removeFromMyHobbies' , (req, res)=>{
+  const {_id, userId} = req.body
+  User.findByIdAndUpdate(userId, {$pull: {hobbies: _id}}, {new: true})
+  .then(userUpdated => {
+    Hobbie.findByIdAndUpdate(_id, {$pull: {users: userId}}, {new: true})
+    .then(hobbieUpdated=>{
+      console.log(hobbieUpdated)
+    })
+  })
+  .catch(error => {
+    console.log(error)
+  })
+  
 })
 
 router.get('/hobbie-details/:name', (req, res)=>{
