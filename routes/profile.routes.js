@@ -2,9 +2,23 @@ const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcryptjs')
 
-
-
 const User = require('../models/User.model')
+
+router.get('/return-user', (req, res)=>{
+  if (req.user) {
+    User.findById(req.user._id)
+      .populate('hobbies')
+      .populate('friends')
+      .then((result) => {
+        res.send({ message: 'Log in verified', result })
+      })
+      .catch(() => {
+        res.send({ message: 'Error verifing the user' })
+      })
+  } else {
+    res.send(req.user)
+  }
+})
 
 router.post('/edit-user', (req, res)=>{
   const {username, _id, password, age, location, photo} = req.body
