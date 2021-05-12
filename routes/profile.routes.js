@@ -21,11 +21,11 @@ router.get('/return-user', (req, res)=>{
 })
 
 router.post('/edit-user', (req, res)=>{
-  const {username, _id, password, age, location, photo} = req.body
+  const {username, _id, password, age, location, photo,status} = req.body
 
   const hashedPassword = bcrypt.hashSync(password, 10)
 
-  User.findByIdAndUpdate(_id, {username, hashedPassword, age, location, photo}, {new: true})
+  User.findByIdAndUpdate(_id, {username, hashedPassword, age, location, photo,status}, {new: true})
     .then(user => {
       res.send({message: 'Edited succesfully', user})  
     })
