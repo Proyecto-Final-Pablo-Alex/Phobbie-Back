@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const Hobbie = require('../models/Hobbie.model')
+const User = require('../models/User.model')
 
 router.get(`/hobbies/allHobbies`, (req, res) => {
   Hobbie.find({})
@@ -14,10 +15,16 @@ router.get(`/hobbies/allHobbies`, (req, res) => {
 })
 
 router.post('/hobbies/addHobbie', (req, res)=> {
-  const {name, photo, description} = req.body
+  const {name, photo, description, userId} = req.body
   Hobbie.create({name, photo, description})
-  .then(result => {
-    res.status(201).send(result)
+  .then(hobbie => {
+    Hobbie.findByIdAndUpdate(hobbie._id, {$push: {users: userId}}, {new: true})
+    .then((updatedHobbie)=>{
+      User.findByIdAndUpdate(userId, {$push: {hobbies: updatedHobbie._id}}, {new: true})
+      .then((user)=>{
+        res.status(201).send(user)
+      })
+    })
   })
   .catch(err=> {
     console.log(err)
