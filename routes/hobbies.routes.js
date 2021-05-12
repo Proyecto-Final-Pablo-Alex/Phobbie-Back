@@ -41,10 +41,11 @@ router.post('/hobbies/addHobbie', (req, res)=> {
 router.post('/hobbies/addToMyHobbies', (req, res)=>{
   const {_id, userId} = req.body
   Hobbie.findByIdAndUpdate(_id, {$push: {users: userId}}, {new: true})
+  .populate('users')
   .then((updatedHobbie)=>{
     User.findByIdAndUpdate(userId, {$push: {hobbies: updatedHobbie._id}}, {new: true})
-    .then((user)=>{
-      res.status(201).send(user)
+    .then((userUpdated)=>{
+      res.status(201).send({user: userUpdated, hobbie: updatedHobbie})
     })
   })
   .catch(err=>{
@@ -57,8 +58,9 @@ router.post('/hobbies/removeFromMyHobbies' , (req, res)=>{
   User.findByIdAndUpdate(userId, {$pull: {hobbies: _id}}, {new: true})
   .then(userUpdated => {
     Hobbie.findByIdAndUpdate(_id, {$pull: {users: userId}}, {new: true})
-    .then(hobbieUpdated=>{
-      console.log(hobbieUpdated)
+    .populate('users')
+    .then(updatedHobbie=>{
+      res.status(200).send({user: userUpdated, hobbie: updatedHobbie})
     })
   })
   .catch(error => {
