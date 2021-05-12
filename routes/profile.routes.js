@@ -2,11 +2,11 @@ const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcryptjs')
 
-const fileUploader = require("../configs/cloudinary.config");
+
 
 const User = require('../models/User.model')
 
-router.post('/edit-user', fileUploader.single('photo'), (req, res)=>{
+router.post('/edit-user', (req, res)=>{
   const {username, _id, password, age, location, photo} = req.body
 
   const hashedPassword = bcrypt.hashSync(password, 10)
