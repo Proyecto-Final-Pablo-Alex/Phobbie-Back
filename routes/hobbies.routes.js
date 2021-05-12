@@ -55,8 +55,8 @@ router.post('/hobbies/addToMyHobbies', (req, res)=>{
   })
 })
 
-router.get('/hobbie-details', (req, res)=>{
-  const {name} = req.body
+router.get('/hobbie-details/:name', (req, res)=>{
+  const {name} = req.params
   Hobbie.findOne({name})
   .then(hobbie => {
     res.send(hobbie)
