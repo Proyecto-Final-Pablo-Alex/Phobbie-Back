@@ -16,18 +16,24 @@ router.get(`/hobbies/allHobbies`, (req, res) => {
 
 router.post('/hobbies/addHobbie', (req, res)=> {
   const {name, photo, description, userId} = req.body
-  Hobbie.create({name, photo, description})
-  .then(hobbie => {
-    Hobbie.findByIdAndUpdate(hobbie._id, {$push: {users: userId}}, {new: true})
-    .then((updatedHobbie)=>{
-      User.findByIdAndUpdate(userId, {$push: {hobbies: updatedHobbie._id}}, {new: true})
-      .then((user)=>{
-        res.status(201).send(user)
-      })
-    })
+  Hobbie.findOne({name})
+  .then(result => {
+    if(!result){
+      Hobbie.create({name, photo, description})
+      .then(hobbie => {
+        Hobbie.findByIdAndUpdate(hobbie._id, {$push: {users: userId}}, {new: true})
+        .then((updatedHobbie)=>{
+          User.findByIdAndUpdate(userId, {$push: {hobbies: updatedHobbie._id}}, {new: true})
+          .then((user)=>{
+            res.status(201).send(user)
+          })
+        })
+      }) 
+    }else{
+      res.send({message: 'This hobbie has already been created'})
+    }
   })
-  .catch(err=> {
-    console.log(err)
+  .catch(err => {
     res.status(400).send({ message: 'Something went wrong' }, err)
   })
 })
