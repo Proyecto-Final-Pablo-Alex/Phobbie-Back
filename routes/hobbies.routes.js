@@ -38,4 +38,21 @@ router.post('/hobbies/addHobbie', (req, res)=> {
   })
 })
 
+router.post('/hobbies/addToMyHobbies', (req, res)=>{
+  const {name, userId} = req.body
+  Hobbie.findOne({name})
+  .then(hobbie => {
+    Hobbie.findByIdAndUpdate(hobbie._id, {$push: {users: userId}}, {new: true})
+    .then((updatedHobbie)=>{
+      User.findByIdAndUpdate(userId, {$push: {hobbies: updatedHobbie._id}}, {new: true})
+      .then((user)=>{
+        res.status(201).send(user)
+      })
+    })
+  })
+  .catch(err=>{
+    res.status(400).send({ message: 'Something went wrong' }, err)
+  })
+})
+
 module.exports = router
