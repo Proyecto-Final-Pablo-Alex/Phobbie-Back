@@ -65,16 +65,35 @@ router.post('/see-requests', (req, res, next) => {
 })
 
 router.post('/delete-friend', (req, res)=>{
-    const {requester, recipient, _id} = req.body
-    FriendShip.findByIdAndDelete(_id)
-    .then(statusDeleted=>{
-        User.findByIdAndUpdate(requester, {$pull: {friends: recipient}})
-        .then((userUpdated)=>{
-            User.findByIdAndUpdate(recipient, {$pull: {friends: requester}})
-            .then((user2Updated)=>{
-                res.send({message:"Friend Deleted"})
+    const {requester, recipient} = req.body
+    FriendShip.find({recipient, requester})
+    .then(result=>{
+        if(result.length > 0 ){
+            FriendShip.findByIdAndDelete(result._id)
+            .then(statusDeleted=>{
+                User.findByIdAndUpdate(requester, {$pull: {friends: recipient}})
+                .then((userUpdated)=>{
+                    User.findByIdAndUpdate(recipient, {$pull: {friends: requester}})
+                    .then((user2Updated)=>{
+                        res.send({message:"Friend Deleted"})
+                    })
+                })
             })
-        })
+        }else{
+            FriendShip.find({recipient: requester, requester: recipient})
+            .then(result2 => {
+                FriendShip.findByIdAndDelete(result2._id)
+                .then(statusDeleted=>{
+                    User.findByIdAndUpdate(requester, {$pull: {friends: recipient}})
+                    .then((userUpdated)=>{
+                        User.findByIdAndUpdate(recipient, {$pull: {friends: requester}})
+                        .then((user2Updated)=>{
+                            res.send({message:"Friend Deleted"})
+                        })
+                    })
+                })
+            })
+        }
     })
     .catch(error => {
         console.log(error)
