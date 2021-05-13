@@ -69,7 +69,7 @@ router.post('/delete-friend', (req, res)=>{
     FriendShip.find({recipient, requester})
     .then(result=>{
         if(result.length > 0 ){
-            FriendShip.findByIdAndDelete(result._id)
+            FriendShip.findByIdAndDelete(result[0]._id)
             .then(statusDeleted=>{
                 User.findByIdAndUpdate(requester, {$pull: {friends: recipient}})
                 .then((userUpdated)=>{
@@ -82,7 +82,7 @@ router.post('/delete-friend', (req, res)=>{
         }else{
             FriendShip.find({recipient: requester, requester: recipient})
             .then(result2 => {
-                FriendShip.findByIdAndDelete(result2._id)
+                FriendShip.findByIdAndDelete(result2[0]._id)
                 .then(statusDeleted=>{
                     User.findByIdAndUpdate(requester, {$pull: {friends: recipient}})
                     .then((userUpdated)=>{
