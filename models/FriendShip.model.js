@@ -6,7 +6,7 @@ const FriendShipSchema = new Schema(
   {
     requester: {type: Schema.Types.ObjectId, ref: 'User'},
     recipient: {type: Schema.Types.ObjectId, ref: 'User'},
-    status:{type: String, enum: ["REQUESTED", "ACCEPTED", "REJECTED"], defaul: "REQUESTED"}
+    status:{type: String, enum: ["REQUESTED", "ACCEPTED", "REJECTED"], default: "REQUESTED"}
   },
   { versionKey: false }
 )

@@ -97,6 +97,7 @@ app.use('/', require('./routes/auth.routes'))
 app.use('/', require('./routes/profile.routes'))
 app.use('/', require('./routes/hobbies.routes'))
 app.use('/', require('./routes/cloudinary.routes'))
+app.use('/', require('./routes/friendship.routes'))
 
 app.listen(process.env.PORT || 5000, () => {
   console.log(chalk.green.inverse('Puerto activado'))
