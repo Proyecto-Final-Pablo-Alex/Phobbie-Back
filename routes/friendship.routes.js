@@ -25,13 +25,13 @@ router.post('/send-request', (req, res, next) => {
 
 router.post('/accept-request', (req, res, next) => {
     const {requester, recipient, _id} = req.body
-    FriendShip.findByIdAndUpdate(_id, {requester,recipient,status: "ACCEPTED"})
-    .then(result=>{
+    FriendShip.findByIdAndUpdate(_id, {status: "ACCEPTED"})
+    .then(statusChanged=>{
         User.findByIdAndUpdate(requester, {$push: {friends: recipient}})
-        .then((result2)=>{
+        .then((userUpdated)=>{
             User.findByIdAndUpdate(recipient, {$push: {friends: requester}})
-            .then((result3)=>{
-                res.send({message:"Friend Accepted"})
+            .then((user2Updated)=>{
+                res.send({message:"Friend Req. Accepted"})
             })
         })
     })
@@ -41,7 +41,14 @@ router.post('/accept-request', (req, res, next) => {
 })
 
 router.post('/reject-request', (req, res, next) => {
-    res.send('index');
+    const {requester, recipient, _id} = req.body
+    FriendShip.findByIdAndUpdate(_id, {status: "REJECTED"})
+    .then(statusChanged=>{
+        res.send({message:"Friend Req. Rejected"})
+    })
+    .catch(error=>{
+        console.log(error)
+    })
 })
 
 router.post('/see-requests', (req, res, next) => {
@@ -56,5 +63,23 @@ router.post('/see-requests', (req, res, next) => {
         console.log(error)
     })
 })
+
+router.post('/delete-friend', (req, res)=>{
+    const {requester, recipient, _id} = req.body
+    FriendShip.findByIdAndDelete(_id)
+    .then(statusDeleted=>{
+        User.findByIdAndUpdate(requester, {$pull: {friends: recipient}})
+        .then((userUpdated)=>{
+            User.findByIdAndUpdate(recipient, {$pull: {friends: requester}})
+            .then((user2Updated)=>{
+                res.send({message:"Friend Deleted"})
+            })
+        })
+    })
+    .catch(error => {
+        console.log(error)
+    })  
+})
+
 
 module.exports = router;
