@@ -8,12 +8,15 @@ const User = require('../models/User.model')
 
 /* POST new user */
 router.post('/signup', (req, res, next) => {
-  const { username, password, age, location} = req.body
-  if (username === '' || password === '' || age === '' || location === '') {
+  const { username, password, age, location, passwordConfirm} = req.body
+  if (username === '' || password === '' || age === '' || location === '' || passwordConfirm === "") {
     res.send({ message: "All the fields are mandatory" })
     return
   } else if (password.length < 6) {
     res.send({ message: 'The password must be at least 6 digits long' })
+    return
+  }else if(password !== passwordConfirm){
+    res.send({ message: "Passwords don't match" })
     return
   }else{ 
   User.findOne({ username })

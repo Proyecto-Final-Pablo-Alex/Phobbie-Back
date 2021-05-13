@@ -39,4 +39,15 @@ router.post('/edit-user', (req, res)=>{
     })
 })
 
+router.post('/delete-user', (req, res)=>{
+  const {_id} = req.body
+  User.findByIdAndDelete(_id)
+    .then(user=> {
+      req.logout()
+    })
+    .catch(error=> {
+      res.send({message: 'Something went wrong', error})
+    })
+})
+
 module.exports = router
