@@ -1,7 +1,8 @@
 const express = require('express');
 const router  = express.Router();
 
-const FriendShip = require('../models/FriendShip.model')
+const FriendShip = require('../models/FriendShip.model');
+const User = require('../models/User.model');
 
 /* GET home page */
 router.post('/send-request', (req, res, next) => {
@@ -23,7 +24,20 @@ router.post('/send-request', (req, res, next) => {
 })
 
 router.post('/accept-request', (req, res, next) => {
-    res.send('index');
+    const {requester, recipient, _id} = req.body
+    FriendShip.findByIdAndUpdate(_id, {requester,recipient,status: "ACCEPTED"})
+    .then(result=>{
+        User.findByIdAndUpdate(requester, {$push: {friends: recipient}})
+        .then((result2)=>{
+            User.findByIdAndUpdate(recipient, {$push: {friends: requester}})
+            .then((result3)=>{
+                res.send({message:"Friend Accepted"})
+            })
+        })
+    })
+    .catch(error => {
+        console.log(error)
+    })  
 })
 
 router.post('/reject-request', (req, res, next) => {
