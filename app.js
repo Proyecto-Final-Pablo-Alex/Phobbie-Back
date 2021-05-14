@@ -10,6 +10,8 @@ const flash = require('connect-flash')
 const session = require('express-session')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
+const socketio = require('socket.io')
+const http = require('http')
 
 const User = require('./models/User.model')
 
@@ -17,6 +19,20 @@ const User = require('./models/User.model')
 require('./configs/mongoose.config')
 
 const app = express()
+const server = http.createServer(app)
+const io = socketio(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    credentials:true
+  }
+})
+
+// --------- IO CONFIG --------- //
+io.on("connection", ()=>{
+
+})
+
 
 // Middleware Setup
 app.use(bodyParser.json())
@@ -99,6 +115,6 @@ app.use('/', require('./routes/hobbies.routes'))
 app.use('/', require('./routes/cloudinary.routes'))
 app.use('/', require('./routes/friendship.routes'))
 
-app.listen(process.env.PORT || 5000, () => {
+server.listen(process.env.PORT || 5000, () => {
   console.log(chalk.green.inverse('Puerto activado'))
 })
