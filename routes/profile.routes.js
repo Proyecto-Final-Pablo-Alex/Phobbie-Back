@@ -26,17 +26,21 @@ router.get('/return-user', (req, res)=>{
 })
 
 router.post('/edit-user', (req, res)=>{
-  const {username, _id, password, age, location, photo,status} = req.body
-
+  const {username, _id, password, age, location, photo,status, confirmPassword} = req.body
+  if (password === confirmPassword){
   const hashedPassword = bcrypt.hashSync(password, 10)
 
-  User.findByIdAndUpdate(_id, {username, hashedPassword, age, location, photo,status}, {new: true})
+  User.findByIdAndUpdate(_id, {username, password:hashedPassword, age, location, photo,status}, {new: true})
     .then(user => {
+      console.log(user)
       res.send({message: 'Edited succesfully', user})  
     })
     .catch(error => {
       res.send({message: 'Something went wrong', error})
     })
+  }else{
+    res.send({message: "both passwords must match"})
+    }
 })
 
 router.post('/delete-user', (req, res)=>{
