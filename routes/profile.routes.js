@@ -25,6 +25,27 @@ router.get('/return-user', (req, res)=>{
   })
 })
 
+router.get('/return-friend/:id', (req, res)=>{
+  const {id} = req.params
+  const filtered = req.user.friends.filter((friend)=>{return (friend == id)})
+
+  if (filtered.length > 0) {
+    User.findById(id)
+    .populate('hobbies')
+    .populate('friends')
+    .then((result) => {
+      res.send({ message: 'Friend found', result })
+      
+    })
+    .catch(() => {
+      res.send({ message: 'Error verifying the user' })
+    })
+  } else {
+    res.send({message: 'You are not friends yet'})
+  }
+})
+
+
 router.post('/edit-user', (req, res)=>{
   const {username, _id, password, age, location, photo,status, confirmPassword} = req.body
   if (password === confirmPassword){
