@@ -3,6 +3,7 @@ const router  = express.Router();
 
 const FriendShip = require('../models/FriendShip.model');
 const User = require('../models/User.model');
+const Chat = require('../models/Chat.model')
 
 /* GET home page */
 router.post('/send-request', (req, res, next) => {
@@ -31,7 +32,11 @@ router.post('/accept-request', (req, res, next) => {
         .then((userUpdated)=>{
             User.findByIdAndUpdate(recipient, {$push: {friends: requester}})
             .then((user2Updated)=>{
-                res.send({message:"Friend Req. Accepted"})
+                Chat.create({participants: [requester, recipient], room:requester+''+recipient})
+                    .then(result => {
+                        console.log(result)
+                        res.send({message:"Friend Req. Accepted"})
+                    })   
             })
         })
     })

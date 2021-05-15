@@ -10,7 +10,6 @@ const flash = require('connect-flash')
 const session = require('express-session')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
-const socketio = require('socket.io')
 const http = require('http')
 
 const User = require('./models/User.model')
@@ -18,21 +17,11 @@ const User = require('./models/User.model')
 // -------- MONGOOSE --------
 require('./configs/mongoose.config')
 
+
 const app = express()
 const server = http.createServer(app)
-const io = socketio(server, {
-  cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
-    credentials:true
-  }
-})
 
-// --------- IO CONFIG --------- //
-io.on("connection", ()=>{
-
-})
-
+require('./configs/sockets.config')(server)
 
 // Middleware Setup
 app.use(bodyParser.json())
