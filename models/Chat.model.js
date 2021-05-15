@@ -5,7 +5,7 @@ const chatSchema = new Schema(
   {
     participants: [{type: Schema.Types.ObjectId, ref: 'User'}],
     room: String, 
-    messages: [{username: String, date: Date, message: String}],
+    messages: [{username: String, date: Date, message: String, status: {type: String, enum: [""]}}],
   },
   { versionKey: false }
 )
