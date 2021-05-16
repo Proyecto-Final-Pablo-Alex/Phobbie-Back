@@ -4,8 +4,7 @@ const Schema = mongoose.Schema
 const chatSchema = new Schema(
   {
     participants: [{type: Schema.Types.ObjectId, ref: 'User'}],
-    room: String, 
-    messages: [{username: String, date: Date, message: String, status: {type: String, enum: [""]}}],
+    messages: [{username: String, date: Date, message: String, status: {type: String, enum: ["READ", "UNREAD"]}}],
   },
   { versionKey: false }
 )
