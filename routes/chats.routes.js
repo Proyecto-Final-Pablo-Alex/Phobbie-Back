@@ -27,6 +27,18 @@ router.get("/return-chat/:_id", (req, res)=>{
 
 router.post("/send-msg/:_id", (req, res)=>{
     const {_id} = req.params
+    Chat.findOne({$and: [{participants: req.user._id},{participants: _id}]})
+    .then(chat => {
+        Chat.findByIdAndUpdate(chat._id, {$push: {messages: req.body}}, {new: true})
+        .then(result => {
+            console.log(result)
+            res.send(result)
+        })
+    })
+    .catch(error => {
+        console.log(error)
+    })
+    
 })
 
 module.exports = router
