@@ -18,7 +18,6 @@ router.get("/return-chat/:_id", (req, res)=>{
     Chat.find({$and: [{participants: req.user._id},{participants: _id}]})
     .populate("participants")
     .then(conversation => {
-        console.log(conversation)
         const updatedMessages = conversation[0].messages.map(msg=>{
             if(msg.status === "UNREAD" && msg.username !== req.user.username){
                 msg.status = "READ"
@@ -26,8 +25,8 @@ router.get("/return-chat/:_id", (req, res)=>{
             return msg
         })
         Chat.findByIdAndUpdate(conversation[0]._id, {messages: updatedMessages}, {new: true})
+        .populate('participants')
         .then(result => {
-            console.log(result)
             res.send(result)
         })
     })
