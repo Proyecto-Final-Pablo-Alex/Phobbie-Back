@@ -20,7 +20,7 @@ router.get("/return-chat/:_id", (req, res)=>{
     .then(conversation => {
         console.log(conversation)
         const updatedMessages = conversation[0].messages.map(msg=>{
-            if(msg.status === "UNREAD"){
+            if(msg.status === "UNREAD" && msg.username !== req.user.username){
                 msg.status = "READ"
             }
             return msg
