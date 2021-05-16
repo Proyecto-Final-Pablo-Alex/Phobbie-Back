@@ -13,8 +13,20 @@ router.get("/return-all-chats/", (req, res)=>{
     })
 })
 
-// router.get("/return-chat/:id", (req, res)=>{
-    
-// })
+router.get("/return-chat/:_id", (req, res)=>{
+    const {_id} = req.params
+    Chat.find({$and: [{participants: req.user._id},{participants: _id}]})
+    .populate("participants")
+    .then(result => {
+        res.send(result)
+    })
+    .catch(error => {
+        console.log(error)
+    }) 
+})
+
+router.post("/send-msg/:_id", (req, res)=>{
+    const {_id} = req.params
+})
 
 module.exports = router
