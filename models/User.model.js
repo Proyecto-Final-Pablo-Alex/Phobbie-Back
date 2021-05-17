@@ -13,7 +13,7 @@ const userSchema = new Schema(
     location:{type:String},
     friends: [{type: Schema.Types.ObjectId, ref: 'User'}],
     hobbies: [{ type: Schema.Types.ObjectId, ref: 'Hobbie' }],
-    status: {type:String, default:"Hi there! I'm not using Wh..., I'm using HobbieSphere."}
+    status: {type:String, default:"Hi there! I'm not using Wh..., I'm using Phobbie."}
   },
   { versionKey: false }
 )
