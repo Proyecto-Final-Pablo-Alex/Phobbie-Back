@@ -1,7 +1,7 @@
+// ---------- MONGOOSE CONFIG------------ //
 const mongoose = require('mongoose')
 
-mongoose
-.connect(process.env.DB_URL , {
+mongoose.connect(process.env.DB_URL , {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
@@ -12,4 +12,3 @@ mongoose
   .catch((err) => {
     console.error('Error connecting to mongo', err)
   })
-
