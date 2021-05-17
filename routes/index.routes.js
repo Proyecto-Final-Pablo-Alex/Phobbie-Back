@@ -1,7 +1,9 @@
+// ---------- IMPORT PACKAGES ----------- //
 const express = require('express');
 const router  = express.Router();
 
-/* GET home page */
+// ---------- ROUTES ----------- //
+// ---------- Home view route ----------- //
 router.get('/', (req, res, next) => {
   res.send('index');
 });

@@ -39,7 +39,7 @@ router.post('/signup', (req, res, next) => {
       }
     })
     .catch((err) => {
-      res.status(400).send(err)
+      res.status(400).send({ message: 'Something went wrong' }, err)
     })}
 })
 

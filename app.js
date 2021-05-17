@@ -1,5 +1,5 @@
+// ---------- IMPORT PACKAGES ----------- //
 require('dotenv').config()
-
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const express = require('express')
@@ -12,21 +12,23 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const http = require('http')
 
+// ---------- IMPORT DB MODELS ----------- //
 const User = require('./models/User.model')
+
 
 // -------- MONGOOSE --------
 require('./configs/mongoose.config')
 
-
+//  -----------SERVER --------//
 const app = express()
 const server = http.createServer(app)
 
-// Middleware Setup
+// ---------- MIDDLEWARE ----------- //
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 
-// ---------------CORS-----------
+// ---------------CORS-----------//
 app.use(
   cors({
     methods: ['GET', 'POST'],
@@ -35,7 +37,7 @@ app.use(
   })
 )
 
-// -------- PASSPORT --------
+// -------- PASSPORT --------//
 app.use(
   session({
     secret: process.env.SECRET,
@@ -44,12 +46,10 @@ app.use(
   })
 )
 
-//PASO 4: Configurar la serializacion del usuario.
 passport.serializeUser((user, callback) => {
   callback(null, user._id)
 })
 
-//PASO 5: Configurar la deserializacion del usuario.
 passport.deserializeUser((id, callback) => {
   User.findById(id)
     .then((result) => {
@@ -60,10 +60,8 @@ passport.deserializeUser((id, callback) => {
     })
 })
 
-//PASO 6: Configurar el middleware de flash
 app.use(flash())
 
-//PASO 7: Configurar el middleware del Strategy.
 passport.use(
   new LocalStrategy(
     {
@@ -74,14 +72,15 @@ passport.use(
     (req, username, password, next) => {
       User.findOne({ username })
         .then((user) => {
+
           if (!user) {
-            //si el usuario no existe
             return next(null, false, { message: `incorrect username` })
           }
+
           if (!bcrypt.compareSync(password, user.password)) {
-            //Si la contraseña no coincide
             return next(null, false, { message: `Incorrect password` })
           }
+          
           return next(null, user)
         })
         .catch((err) => {
@@ -91,10 +90,10 @@ passport.use(
   )
 )
 
-//PASO 10: Configurar middleware de passport
 app.use(passport.initialize())
 app.use(passport.session())
 
+// ---------- IMPORT ROUTE FILES ----------- //
 app.use('/', require('./routes/index.routes'))
 app.use('/', require('./routes/auth.routes'))
 app.use('/', require('./routes/profile.routes'))
@@ -103,6 +102,7 @@ app.use('/', require('./routes/cloudinary.routes'))
 app.use('/', require('./routes/friendship.routes'))
 app.use('/', require('./routes/chats.routes'))
 
+// ---------- SERVER LISTEN----------- //
 server.listen(process.env.PORT || 5000, () => {
   console.log(chalk.green.inverse('Puerto activado'))
 })

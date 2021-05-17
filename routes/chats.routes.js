@@ -14,7 +14,7 @@ router.get("/return-all-chats/", (req, res)=>{
             res.status(200).send(result)
         })
         .catch(error => {
-            res.status(400).send(error)
+            res.status(400).send({ message: 'Something went wrong' }, err)
         })
 })
 
@@ -39,7 +39,7 @@ router.get("/return-chat/:_id", (req, res)=>{
                 })
         })
         .catch(error => {
-            res.status(400).send(error)
+            res.status(400).send({ message: 'Something went wrong' }, err)
         }) 
 })
 
@@ -55,7 +55,7 @@ router.post("/send-msg/:_id", (req, res)=>{
                 })
         })
         .catch(error => {
-            res.status(400).send(error)
+            res.status(400).send({ message: 'Something went wrong' }, err)
         })
 })
 

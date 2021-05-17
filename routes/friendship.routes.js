@@ -25,7 +25,7 @@ router.post('/send-request', (req, res) => {
             }
         })
         .catch(error => {
-            res.status(400).send(error)
+            res.status(400).send({ message: 'Something went wrong' }, err)
         })  
 })
 
@@ -50,7 +50,7 @@ router.post('/accept-request', (req, res) => {
                 })
         })
         .catch(error => {
-           res.status(400).send(error)
+            res.status(400).send({ message: 'Something went wrong' }, err)
         })  
 })
 
@@ -63,7 +63,7 @@ router.post('/reject-request', (req, res) => {
             res.status(200).send({message:"Friend Req. Rejected"})
         })
         .catch(error=>{
-            res.status(400).send(error)
+            res.status(400).send({ message: 'Something went wrong' }, err)
         })
 })
 
@@ -77,7 +77,7 @@ router.post('/see-requests', (req, res) => {
             res.status(200).send(result)
         })
         .catch(error => {
-            res.status(400).send(error)
+            res.status(400).send({ message: 'Something went wrong' }, err)
         })
 })
 
@@ -100,7 +100,7 @@ router.post('/delete-friend', (req, res)=>{
                                             
                                             Chat.findByIdAndDelete(chat[0]._id)
                                                 .then(deleted => {
-                                                    res.send({message:"Friend Deleted"})
+                                                    res.status(200).send({message:"Friend Deleted"})
                                                 })
                                         })
                                 })
@@ -108,7 +108,7 @@ router.post('/delete-friend', (req, res)=>{
                 })
         })
         .catch(error => {
-            console.log(error)
+            res.status(400).send({ message: 'Something went wrong' }, err)
         })  
 })
 
