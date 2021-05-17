@@ -21,8 +21,6 @@ require('./configs/mongoose.config')
 const app = express()
 const server = http.createServer(app)
 
-require('./configs/sockets.config')(server)
-
 // Middleware Setup
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
