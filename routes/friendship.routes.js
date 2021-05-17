@@ -1,108 +1,115 @@
+// ---------- IMPORT PACKAGES ----------- //
 const express = require('express');
 const router  = express.Router();
 
+// ---------- IMPORT DB MODELS ----------- //
 const FriendShip = require('../models/FriendShip.model');
 const User = require('../models/User.model');
 const Chat = require('../models/Chat.model')
 
-/* GET home page */
-router.post('/send-request', (req, res, next) => {
+// ---------- ROUTES ----------- //
+// ---------- Send friend request route ----------- //
+router.post('/send-request', (req, res) => {
     const {requester, recipient} = req.body
+
     FriendShip.find({$and: [{recipient: recipient}, {requester: requester}]})
-    .then(result => {
-        if(!result.length > 0){
-            FriendShip.create({requester,recipient})
-            .then(result=>{
-                res.send(result)
-            })
-        }else{
-            res.send({errorMessage: "Already requested"})
-        }
-    })
-    .catch(error => {
-        console.log(error)
-    })  
-})
+        .then(result => {
+            if(!result.length > 0){
+                FriendShip.create({requester,recipient})
+                    .then(result=>{
+                        res.status(201).send(result)
+                    })
 
-router.post('/accept-request', (req, res, next) => {
-    const {requester, recipient, _id} = req.body
-    FriendShip.findByIdAndUpdate(_id, {status: "ACCEPTED"})
-    .then(statusChanged=>{
-        User.findByIdAndUpdate(requester, {$push: {friends: recipient}})
-        .then((userUpdated)=>{
-            User.findByIdAndUpdate(recipient, {$push: {friends: requester}})
-            .then((user2Updated)=>{
-                Chat.create({participants: [requester, recipient], room:requester+''+recipient})
-                    .then(result => {
-                        console.log(result)
-                        res.send({message:"Friend Req. Accepted"})
-                    })   
-            })
+            }else{
+                res.status(400).send({errorMessage: "Already requested"})
+            }
         })
-    })
-    .catch(error => {
-        console.log(error)
-    })  
+        .catch(error => {
+            res.status(400).send(error)
+        })  
 })
 
-router.post('/reject-request', (req, res, next) => {
+// ---------- Accept friend request route ----------- //
+router.post('/accept-request', (req, res) => {
     const {requester, recipient, _id} = req.body
-    FriendShip.findByIdAndUpdate(_id, {status: "REJECTED"})
-    .then(statusChanged=>{
-        res.send({message:"Friend Req. Rejected"})
-    })
-    .catch(error=>{
-        console.log(error)
-    })
+
+    FriendShip.findByIdAndUpdate(_id, {status: "ACCEPTED"})
+        .then(statusChanged=>{
+
+            User.findByIdAndUpdate(requester, {$push: {friends: recipient}})
+                .then((userUpdated)=>{
+
+                    User.findByIdAndUpdate(recipient, {$push: {friends: requester}})
+                        .then((user2Updated)=>{
+
+                            Chat.create({participants: [requester, recipient]})
+                                .then(result => {
+                                    res.status(200).send({message:"Friend Req. Accepted"})
+                                })   
+                        })
+                })
+        })
+        .catch(error => {
+           res.status(400).send(error)
+        })  
 })
 
-router.post('/see-requests', (req, res, next) => {
+// ---------- Reject friend request route ----------- //
+router.post('/reject-request', (req, res) => {
     const {_id} = req.body
-    FriendShip.find({recipient: _id, status: "REQUESTED"})
-    .populate('requester')
-    .then(result => {
-        // console.log(result)
-        res.send(result)
-    })
-    .catch(error => {
-        console.log(error)
-    })
+
+    FriendShip.findByIdAndUpdate(_id, {status: "REJECTED"})
+        .then(statusChanged=>{
+            res.status(200).send({message:"Friend Req. Rejected"})
+        })
+        .catch(error=>{
+            res.status(400).send(error)
+        })
 })
 
+// ---------- Return all request the user has without response route ----------- //
+router.post('/see-requests', (req, res) => {
+    const {_id} = req.body
+
+    FriendShip.find({recipient: _id, status: "REQUESTED"})
+        .populate('requester')
+        .then(result => {
+            res.status(200).send(result)
+        })
+        .catch(error => {
+            res.status(400).send(error)
+        })
+})
+
+// ---------- Delete someone from your friends route ----------- //
 router.post('/delete-friend', (req, res)=>{
     const {requester, recipient} = req.body
-    FriendShip.find({recipient, requester})
-    .then(result=>{
-        if(result.length > 0 ){
-            FriendShip.findByIdAndDelete(result[0]._id)
-            .then(statusDeleted=>{
-                User.findByIdAndUpdate(requester, {$pull: {friends: recipient}})
-                .then((userUpdated)=>{
-                    User.findByIdAndUpdate(recipient, {$pull: {friends: requester}})
-                    .then((user2Updated)=>{
-                        res.send({message:"Friend Deleted"})
-                    })
-                })
-            })
-        }else{
-            FriendShip.find({recipient: requester, requester: recipient})
-            .then(result2 => {
-                FriendShip.findByIdAndDelete(result2[0]._id)
+;
+    FriendShip.find({$or: [{recipient, requester}, {recipient: requester, requester: recipient}]})
+        .then(friendship=>{
+            FriendShip.findByIdAndDelete(friendship[0]._id)
                 .then(statusDeleted=>{
                     User.findByIdAndUpdate(requester, {$pull: {friends: recipient}})
-                    .then((userUpdated)=>{
-                        User.findByIdAndUpdate(recipient, {$pull: {friends: requester}})
-                        .then((user2Updated)=>{
-                            res.send({message:"Friend Deleted"})
+                        .then((userUpdated)=>{
+                            
+                            User.findByIdAndUpdate(recipient, {$pull: {friends: requester}})
+                                .then((user2Updated)=>{
+
+                                    Chat.find({$and: [{participants: requester}, {participants: recipient}]})
+                                        .then(chat => {
+                                            
+                                            Chat.findByIdAndDelete(chat._id)
+                                                .then(deleted => {
+                                                    res.send({message:"Friend Deleted"})
+                                                })
+                                        })
+                                })
                         })
-                    })
                 })
-            })
-        }
-    })
-    .catch(error => {
-        console.log(error)
-    })  
+        })
+        .catch(error => {
+            console.log(error)
+        })  
 })
 
 
