@@ -98,7 +98,7 @@ router.post('/delete-friend', (req, res)=>{
                                     Chat.find({$and: [{participants: requester}, {participants: recipient}]})
                                         .then(chat => {
                                             
-                                            Chat.findByIdAndDelete(chat._id)
+                                            Chat.findByIdAndDelete(chat[0]._id)
                                                 .then(deleted => {
                                                     res.send({message:"Friend Deleted"})
                                                 })
