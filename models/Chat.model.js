@@ -13,7 +13,7 @@ const chatSchema = new Schema(
       status: {type: String, enum: ["READ", "UNREAD"], default: "UNREAD"}
     }]
   },
-  { versionKey: false }
+  { versionKey: false, timestamps: true }
 )
 
 const Chat = mongoose.model('Chat', chatSchema)

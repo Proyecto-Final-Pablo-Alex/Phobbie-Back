@@ -8,7 +8,7 @@ const Chat = require('../models/Chat.model');
 // ---------- ROUTES ----------- //
 // ---------- Get all chats user participate route ----------- //
 router.get("/return-all-chats/", (req, res)=>{
-    Chat.find({participants: req.user._id})
+    Chat.find({participants: req.user._id}).sort({updatedAt: -1})
         .populate("participants")
         .then(result => {
             res.status(200).send(result)
