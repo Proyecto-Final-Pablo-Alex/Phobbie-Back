@@ -74,7 +74,7 @@ passport.use(
         .then((user) => {
 
           if (!user) {
-            return next(null, false, { message: `incorrect username` })
+            return next(null, false, { message: `Incorrect username` })
           }
 
           if (!bcrypt.compareSync(password, user.password)) {

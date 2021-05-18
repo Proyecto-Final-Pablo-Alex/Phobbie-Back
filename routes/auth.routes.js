@@ -13,22 +13,22 @@ router.post('/signup', (req, res, next) => {
   const { username, password, age, location, passwordConfirm} = req.body
 
   if (username === '' || password === '' || age === '' || location === '' || passwordConfirm === "") {
-    res.status(400).send({ message: "All the fields are mandatory" })
+    res.status(200).send({ message: "All the fields are mandatory" })
     return
 
   } else if (password.length < 6) {
-    res.status(400).send({ message: 'The password must be at least 6 digits long' })
+    res.status(200).send({ message: 'The password must be at least 6 digits long' })
     return
 
   }else if(password !== passwordConfirm){
-    res.status(400).send({ message: "Passwords don't match" })
+    res.status(200).send({ message: "Passwords don't match" })
     return
 
   }else{ 
   User.findOne({ username })
     .then((user) => {
       if (user) {
-        res.status(400).send({ message: 'This user already exists' })
+        res.status(200).send({ message: 'This user already exists' })
         return
         
       } else {
