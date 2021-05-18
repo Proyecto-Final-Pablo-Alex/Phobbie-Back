@@ -23,13 +23,9 @@ router.get('/return-user', (req, res)=>{
       })
 
   } else {
-    res.status(400).send(req.user)
+    res.status(200).send(req.user)
   }
 
-  res.cookie('sameSite', 'none', {
-    sameSite: true,
-    secure: true,
-  })
 })
 
 // ---------- Get an specific friend info from the DB route ----------- //

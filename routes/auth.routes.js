@@ -44,7 +44,7 @@ router.post('/signup', (req, res, next) => {
 })
 
 // ---------- Log In route------------ //
-router.post('/login',(req,res) =>{
+router.post('/login',(req,res,next) =>{
   passport.authenticate('local', (err, user, failureDetails) => {
     if (err) {
       res.status(400).send({ message: 'Something went wrong with Passport Authentication' })
@@ -56,11 +56,7 @@ router.post('/login',(req,res) =>{
       return
     }
 
-    res.cookie('sameSite', 'none', {
-      sameSite: true,
-      secure: true,
-    })
-
+    
     req.login(user, (err) => {
       if (err) {
         res.status(400).send({ message: 'Something went bad with req.login', err })
@@ -69,7 +65,7 @@ router.post('/login',(req,res) =>{
       }
     })
 
-  })(req,res)
+  })(req,res,next)
 })
 
 // ---------- Logout route------------ //

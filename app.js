@@ -11,6 +11,7 @@ const session = require('express-session')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const http = require('http')
+const cookieSession = require('cookie-session')
 
 // ---------- IMPORT DB MODELS ----------- //
 const User = require('./models/User.model')
@@ -21,12 +22,25 @@ require('./configs/mongoose.config')
 
 //  -----------SERVER --------//
 const app = express()
-const server = http.createServer(app)
 
 // ---------- MIDDLEWARE ----------- //
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
+
+//------------SAMESITE COOKIE-------------//
+app.use((req,res,next)=>{
+  res.locals.user=req.user
+  next()
+})
+
+app.set('trust proxy', 1)
+app.use(cookieSession({
+  name:'session',
+  keys:['key1','key2'],
+  sameSite:'none',
+  secure:true
+}))
 
 // ---------------CORS-----------//
 app.use(
@@ -43,6 +57,10 @@ app.use(
     secret: process.env.SECRET,
     resave: true,
     saveUninitialized: true,
+    cookie: {
+      sameSite: 'none',
+      secure:true
+    }
   })
 )
 
@@ -103,6 +121,6 @@ app.use('/', require('./routes/friendship.routes'))
 app.use('/', require('./routes/chats.routes'))
 
 // ---------- SERVER LISTEN----------- //
-server.listen(process.env.PORT || 5000, () => {
+app.listen(process.env.PORT || 5000, () => {
   console.log(chalk.green.inverse('Puerto activado'))
 })
