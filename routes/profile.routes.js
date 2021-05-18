@@ -23,6 +23,10 @@ router.get('/return-user', (req, res)=>{
       })
 
   } else {
+    res.cookie('sameSite', 'none', {
+      sameSite: true,
+      secure: true,
+    })
     res.status(200).send(req.user)
   }
 

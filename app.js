@@ -29,18 +29,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 
 //------------SAMESITE COOKIE-------------//
-app.use((req,res,next)=>{
-  res.locals.user=req.user
-  next()
-})
 
-app.set('trust proxy', 1)
-app.use(cookieSession({
-  name:'session',
-  keys:['key1','key2'],
-  sameSite:'none',
-  secure:true
-}))
 
 // ---------------CORS-----------//
 app.use(
@@ -57,10 +46,6 @@ app.use(
     secret: process.env.SECRET,
     resave: true,
     saveUninitialized: true,
-    cookie: {
-      sameSite: 'none',
-      secure:true
-    }
   })
 )
 
