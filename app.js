@@ -10,7 +10,6 @@ const flash = require('connect-flash')
 const session = require('express-session')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
-const http = require('http')
 const path = require ('path')
 
 // ---------- IMPORT DB MODELS ----------- //
