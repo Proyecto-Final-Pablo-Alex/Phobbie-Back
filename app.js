@@ -7,10 +7,9 @@ const chalk = require('chalk')
 const cors = require('cors')
 const bcrypt = require('bcryptjs')
 const flash = require('connect-flash')
-const session = require('express-session')
+const session = require('cookie-session')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
-const http = require('http')
 const path = require ('path')
 
 // ---------- IMPORT DB MODELS ----------- //
