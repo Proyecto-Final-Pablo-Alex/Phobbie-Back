@@ -11,7 +11,7 @@ const session = require('express-session')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const http = require('http')
-const cookieSession = require('cookie-session')
+const path = require ('path')
 
 // ---------- IMPORT DB MODELS ----------- //
 const User = require('./models/User.model')
@@ -28,8 +28,9 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 
-//------------SAMESITE COOKIE-------------//
+//------------PUBLIC CONFIGURATION-------------//
 
+app.use(express.static(path.join(__dirname, 'public')))
 
 // ---------------CORS-----------//
 app.use(
@@ -97,13 +98,19 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 // ---------- IMPORT ROUTE FILES ----------- //
-app.use('/', require('./routes/index.routes'))
-app.use('/', require('./routes/auth.routes'))
-app.use('/', require('./routes/profile.routes'))
-app.use('/', require('./routes/hobbies.routes'))
-app.use('/', require('./routes/cloudinary.routes'))
-app.use('/', require('./routes/friendship.routes'))
-app.use('/', require('./routes/chats.routes'))
+app.use('/sv', require('./routes/index.routes'))
+app.use('/sv', require('./routes/auth.routes'))
+app.use('/sv', require('./routes/profile.routes'))
+app.use('/sv', require('./routes/hobbies.routes'))
+app.use('/sv', require('./routes/cloudinary.routes'))
+app.use('/sv', require('./routes/friendship.routes'))
+app.use('/sv', require('./routes/chats.routes'))
+
+//----------FRONTEND CONNECTION-----------///
+
+app.use((req,res,next)=>{
+  res.sendFile(__dirname+"/public/index.html")
+})
 
 // ---------- SERVER LISTEN----------- //
 app.listen(process.env.PORT || 5000, () => {
