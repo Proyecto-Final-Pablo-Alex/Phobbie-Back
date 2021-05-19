@@ -107,7 +107,6 @@ app.use('/sv', require('./routes/friendship.routes'))
 app.use('/sv', require('./routes/chats.routes'))
 
 //----------FRONTEND CONNECTION-----------///
-
 app.use((req,res,next)=>{
   res.sendFile(__dirname+"/public/index.html")
 })

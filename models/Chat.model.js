@@ -7,7 +7,7 @@ const chatSchema = new Schema(
   {
     participants: [{type: Schema.Types.ObjectId, ref: 'User'}],
     messages: [{
-      username: String, 
+      username: {type: String, required: true}, 
       date: Date, 
       message: String, 
       status: {type: String, enum: ["READ", "UNREAD"], default: "UNREAD"}
