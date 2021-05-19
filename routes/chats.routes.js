@@ -46,17 +46,21 @@ router.get("/return-chat/:_id", (req, res)=>{
 // ---------- User message sent stored in DB route. ----------- //
 router.post("/send-msg/:_id", (req, res)=>{
     const {_id} = req.params
+    if (req.body.username === ''){
+        return
+    }else{
+        Chat.findOne({$and: [{participants: req.user._id},{participants: _id}]})
+            .then(chat => {
+                Chat.findByIdAndUpdate(chat._id, {$push: {messages: req.body}}, {new: true})
+                    .then(result => {
+                        res.status(200).send(result)
+                    })
+            })
+            .catch(error => {
+                res.status(400).send({ message: 'Something went wrong' }, err)
+            })
+    }
 
-    Chat.findOne({$and: [{participants: req.user._id},{participants: _id}]})
-        .then(chat => {
-            Chat.findByIdAndUpdate(chat._id, {$push: {messages: req.body}}, {new: true})
-                .then(result => {
-                    res.status(200).send(result)
-                })
-        })
-        .catch(error => {
-            res.status(400).send({ message: 'Something went wrong' }, err)
-        })
 })
 
 module.exports = router
