@@ -12,16 +12,15 @@ const Chat = require('../models/Chat.model')
 router.post('/send-request', (req, res) => {
     const {requester, recipient} = req.body
 
-    FriendShip.find({$and: [{recipient: recipient}, {requester: requester}]})
+    FriendShip.find({$or: [{$and: [{recipient: recipient}, {requester: requester}]},{$and: [{recipient: requester}, {requester: recipient}]}]})
         .then(result => {
             if(!result.length > 0){
                 FriendShip.create({requester,recipient})
                     .then(result=>{
                         res.status(201).send(result)
                     })
-
             }else{
-                res.status(400).send({errorMessage: "Already requested"})
+                res.status(200).send({errorMessage: "Already requested"})
             }
         })
         .catch(error => {
