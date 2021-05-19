@@ -7,7 +7,7 @@ Phobbie is social network application where you can connect with other people wh
 As we said, at the moment it's only available for mobile phones. We will soon come back with the desktop version.
 
 ## Go try it yourself!
-Heroku URL : https://phobbie-app.herokuapp.com/
+Heroku URL : https://phobbie.herokuapp.com/
 
 
 ![Phobbie-Preview](https://res.cloudinary.com/hobbiesphere/image/upload/v1621448781/PHOBBIEPREVIEW_vrjmyb.jpg)
